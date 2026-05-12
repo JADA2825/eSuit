@@ -1,0 +1,15 @@
+{
+  "admin": {
+    "salt": "4be84de5b9164c69a0582ab4e3c48cb8",
+    "hash": "8035172f1ddf29353b87b07755074c4bc4849b841ba968f4293c87c4be24c182",
+    "rol": "admin",
+    "nombre": "Administrador",
+    "default_pwd": true
+  },
+  "Deanda": {
+    "salt": "5c526da31c4bab2c775f713c80a4ee69",
+    "hash": "e206d528c0725841838dad50315721a72df9bdc6c722aeeb70fcb225a5d00b92",
+    "rol": "usuario",
+    "nombre": "Construcciones E"
+  }
+}
