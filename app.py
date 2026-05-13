@@ -1,3 +1,5 @@
+# eSuit · Cálculo eléctrico profesional · NOM-001-SEDE-2012
+# Repo: https://github.com/JADA2825/eSuit
 import streamlit as st
 import pandas as pd
 import math
