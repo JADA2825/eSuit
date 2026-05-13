@@ -731,14 +731,15 @@ st.markdown("""
 
     /* ── NUMBER INPUT: ocultar X y normalizar botones +/- ── */
     /* La X de "clear" sólo aparece en number_input */
-    .stNumberInput button[aria-label*="clear" i],
-    .stNumberInput button[aria-label*="borrar" i],
-    .stNumberInput button[title*="Clear" i],
-    .stNumberInput [data-testid*="clear" i] {
+    .stNumberInput [data-baseweb="input"] button[aria-label*="clear" i],
+    .stNumberInput [data-baseweb="input"] button[aria-label*="borrar" i],
+    .stNumberInput [data-baseweb="input"] button[title*="Clear" i],
+    .stNumberInput [data-baseweb="input"] [data-testid*="clear" i] {
         display: none !important;
     }
-    /* Botones +/- del number_input: planos, mismo tamaño */
-    .stNumberInput button {
+    /* Botones +/- del number_input: SOLO los que están dentro del input wrapper.
+       NUNCA tocar el icono ? del label (que también es un <button>). */
+    .stNumberInput [data-baseweb="input"] button {
         min-height: 44px !important;
         height: 44px !important;
         width: 36px !important;
@@ -751,7 +752,7 @@ st.markdown("""
         font-size: 1rem;
         box-shadow: none !important;
     }
-    .stNumberInput button:hover {
+    .stNumberInput [data-baseweb="input"] button:hover {
         background: var(--bg-card) !important;
         color: var(--accent-blue) !important;
     }
@@ -915,54 +916,55 @@ st.markdown("""
     .recom-text { font-size: 0.92rem; color: var(--text-main); line-height: 1.4; }
 
     /* ═══ ICONOS DE AYUDA (?) Y TOOLTIPS ═══════════════════ */
-    /* IMPORTANTE: eliminar TODOS los wrappers visuales que Streamlit
-       pone alrededor del icono ?. En number_input venía con un recuadro
-       oscuro debido al hoverTarget; en selectbox no lo trae.
-       Forzamos transparencia total en todos los contenedores. */
+    /* Reset NUCLEAR del ícono ? y todos sus wrappers:
+       Streamlit lo renderiza como <button> dentro del label, y como
+       otros selectores de buttons podían afectarlo, lo aislamos por
+       completo. */
     [data-testid="stTooltipIcon"],
+    [data-testid="stTooltipIcon"] *,
     [data-testid="stTooltipHoverTarget"],
+    [data-testid="stTooltipHoverTarget"] *,
     [data-testid="stWidgetLabelHelp"],
     [data-testid="stWidgetLabelHelp"] *,
     [data-testid="stWidgetLabelHelpInline"],
-    [data-testid="stWidgetLabelHelpInline"] * {
+    [data-testid="stWidgetLabelHelpInline"] *,
+    [data-testid="stWidgetLabel"] button,
+    [data-testid="stWidgetLabel"] button * {
         background: transparent !important;
         background-color: transparent !important;
-        border: none !important;
+        background-image: none !important;
+        border: 0 !important;
+        border-radius: 0 !important;
         box-shadow: none !important;
         padding: 0 !important;
+        margin: 0 !important;
+        outline: none !important;
+        width: auto !important;
+        height: auto !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
     }
-    /* El círculo ? en sí (el SVG) */
+    /* Estilo final del círculo ? */
     [data-testid="stTooltipIcon"] {
         color: var(--accent-blue) !important;
-        opacity: 0.75;
-        margin-left: 6px;
+        opacity: 0.7;
+        margin-left: 6px !important;
         cursor: help;
         display: inline-flex !important;
         align-items: center;
-        width: auto !important;
-        height: auto !important;
-        min-width: auto !important;
-        min-height: auto !important;
+        vertical-align: middle;
     }
     [data-testid="stTooltipIcon"]:hover { opacity: 1; }
     [data-testid="stTooltipIcon"] svg {
         fill: var(--accent-blue) !important;
         color: var(--accent-blue) !important;
-        width: 15px !important;
-        height: 15px !important;
-        background: transparent !important;
+        width: 14px !important;
+        height: 14px !important;
     }
-    /* El contenedor padre del icono — algunos baseweb wrappers agregan bg */
-    [data-testid="stWidgetLabel"] > div,
-    [data-testid="stWidgetLabel"] > span {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    /* En sidebar dark: el ? con naranja eléctrico */
+    /* Sidebar (siempre dark): icono ? naranja */
     section[data-testid="stSidebar"] [data-testid="stTooltipIcon"] {
         color: var(--accent-orange) !important;
-        opacity: 0.9;
+        opacity: 0.85;
     }
     section[data-testid="stSidebar"] [data-testid="stTooltipIcon"] svg {
         fill: var(--accent-orange) !important;
