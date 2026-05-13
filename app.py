@@ -914,6 +914,55 @@ st.markdown("""
     }
     .recom-text { font-size: 0.92rem; color: var(--text-main); line-height: 1.4; }
 
+    /* ═══ ICONOS DE AYUDA (?) Y TOOLTIPS ═══════════════════ */
+    /* El círculo ? que Streamlit pone al lado de los labels con help= */
+    [data-testid="stTooltipIcon"],
+    [data-testid="stWidgetLabel"] [data-testid="stTooltipIcon"] {
+        color: var(--accent-blue) !important;
+        opacity: 0.85;
+        margin-left: 4px;
+        cursor: help;
+        font-size: 0.85rem;
+        line-height: 1;
+    }
+    [data-testid="stTooltipIcon"]:hover { opacity: 1; }
+    [data-testid="stTooltipIcon"] svg {
+        fill: var(--accent-blue) !important;
+        color: var(--accent-blue) !important;
+        width: 16px !important;
+        height: 16px !important;
+    }
+    /* En sidebar dark: el ? debe ser amarillo/naranja para destacar */
+    section[data-testid="stSidebar"] [data-testid="stTooltipIcon"] {
+        color: var(--accent-orange) !important;
+        opacity: 0.9;
+    }
+    section[data-testid="stSidebar"] [data-testid="stTooltipIcon"] svg {
+        fill: var(--accent-orange) !important;
+        color: var(--accent-orange) !important;
+    }
+
+    /* Tooltip flotante: caja oscura legible */
+    [data-baseweb="tooltip"],
+    [role="tooltip"] {
+        background: rgba(20,22,30,0.96) !important;
+        color: #f5f5f7 !important;
+        border-radius: 10px !important;
+        padding: 8px 12px !important;
+        font-size: 0.82rem !important;
+        line-height: 1.4 !important;
+        max-width: 320px !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.30) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        backdrop-filter: blur(20px);
+        z-index: 9999 !important;
+    }
+    [data-baseweb="tooltip"] *,
+    [role="tooltip"] * {
+        color: #f5f5f7 !important;
+        background: transparent !important;
+    }
+
     /* ═══ RESPONSIVE — TABLET (≤ 1024px) ═══════════════════ */
     @media (max-width: 1024px) {
         .block-container {
