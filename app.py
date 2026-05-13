@@ -915,24 +915,51 @@ st.markdown("""
     .recom-text { font-size: 0.92rem; color: var(--text-main); line-height: 1.4; }
 
     /* ═══ ICONOS DE AYUDA (?) Y TOOLTIPS ═══════════════════ */
-    /* El círculo ? que Streamlit pone al lado de los labels con help= */
+    /* IMPORTANTE: eliminar TODOS los wrappers visuales que Streamlit
+       pone alrededor del icono ?. En number_input venía con un recuadro
+       oscuro debido al hoverTarget; en selectbox no lo trae.
+       Forzamos transparencia total en todos los contenedores. */
     [data-testid="stTooltipIcon"],
-    [data-testid="stWidgetLabel"] [data-testid="stTooltipIcon"] {
+    [data-testid="stTooltipHoverTarget"],
+    [data-testid="stWidgetLabelHelp"],
+    [data-testid="stWidgetLabelHelp"] *,
+    [data-testid="stWidgetLabelHelpInline"],
+    [data-testid="stWidgetLabelHelpInline"] * {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+    /* El círculo ? en sí (el SVG) */
+    [data-testid="stTooltipIcon"] {
         color: var(--accent-blue) !important;
-        opacity: 0.85;
-        margin-left: 4px;
+        opacity: 0.75;
+        margin-left: 6px;
         cursor: help;
-        font-size: 0.85rem;
-        line-height: 1;
+        display: inline-flex !important;
+        align-items: center;
+        width: auto !important;
+        height: auto !important;
+        min-width: auto !important;
+        min-height: auto !important;
     }
     [data-testid="stTooltipIcon"]:hover { opacity: 1; }
     [data-testid="stTooltipIcon"] svg {
         fill: var(--accent-blue) !important;
         color: var(--accent-blue) !important;
-        width: 16px !important;
-        height: 16px !important;
+        width: 15px !important;
+        height: 15px !important;
+        background: transparent !important;
     }
-    /* En sidebar dark: el ? debe ser amarillo/naranja para destacar */
+    /* El contenedor padre del icono — algunos baseweb wrappers agregan bg */
+    [data-testid="stWidgetLabel"] > div,
+    [data-testid="stWidgetLabel"] > span {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    /* En sidebar dark: el ? con naranja eléctrico */
     section[data-testid="stSidebar"] [data-testid="stTooltipIcon"] {
         color: var(--accent-orange) !important;
         opacity: 0.9;
