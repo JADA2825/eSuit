@@ -266,13 +266,24 @@ def ampacidad_base(calibre: str, material: str, temp_aislamiento: int = 75) -> f
 # ─────────────────────────────────────────────
 # FACTORES DE TEMPERATURA (THW 75°C base 30°C)
 # ─────────────────────────────────────────────
-def factor_correccion_temp(temp_c: float) -> float:
+def factor_correccion_temp(temp_c: float, temp_conductor: int = 75) -> float:
+    """Factor de corrección por temperatura ambiente (NOM-001-SEDE-2012
+       Tabla 310-15(B)(2)(a)).
+
+       Para conductor de 75°C (THW, RHW): FC = sqrt((75 − Tamb) / (75 − 30))
+       Es una función monótona decreciente. Para T ambiente ≥ T_conductor,
+       el conductor no puede operar (retorna 0.10 como mínimo de seguridad).
+
+       Validada contra la NOM oficial:
+         35°C → 0.94 · 40°C → 0.88 · 45°C → 0.82
+         50°C → 0.75 · 55°C → 0.67 · 60°C → 0.58
+    """
     if temp_c <= 30:
         return 1.00
-    factores = {31: 0.97, 32: 0.94, 33: 0.91, 34: 0.88, 35: 0.85,
-                36: 0.82, 37: 0.79, 38: 0.76, 39: 0.72, 40: 0.69,
-                41: 0.66, 42: 0.62, 43: 0.59, 44: 0.55, 45: 0.50}
-    return factores.get(int(temp_c), max(0.30, 1.0 - (temp_c - 30) * 0.0167))
+    if temp_c >= temp_conductor:
+        return 0.10  # mínimo de seguridad
+    fc = ((temp_conductor - temp_c) / (temp_conductor - 30)) ** 0.5
+    return round(max(0.10, fc), 2)
 
 
 # ─────────────────────────────────────────────

@@ -1,0 +1,9 @@
+{
+  "admin": {
+    "salt": "6ff9a05373ca6081fefe9f9b4a9a65ff",
+    "hash": "42bb6a258a232b57b1880ca2112d413fe9c879647544e071f9fde8693fdb29cb",
+    "rol": "admin",
+    "nombre": "Administrador",
+    "default_pwd": true
+  }
+}

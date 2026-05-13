@@ -25,15 +25,12 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
-    HRFlowable, PageBreak, KeepTogether,
+    HRFlowable, PageBreak,
 )
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-from calculos import (
-    TABLA_9_NOM, TABLA_CONDUCTORES, r_x_efectivas, ampacidad_base,
-    temp_terminales_auto, formato_proteccion, calibre_tierra,
-)
+from calculos import r_x_efectivas
 
 # ═════════════════════════════════════════════════════════
 # PALETA DE COLORES

@@ -16,10 +16,8 @@ from calculos import (
     formato_proteccion,
     calibre_tierra,
     TABLA_CONDUCTORES,
-    TABLA_9_NOM,
     TABLA_CONDUIT,
     ORDEN_CALIBRES,
-    OCPD_ESTANDARES,
     CANALIZACIONES,
     AISLAMIENTOS_T,
     POLOS_POR_CONFIG,
@@ -152,164 +150,115 @@ def _get_theme():
 
 _THEME = _get_theme()
 
-# Determinamos los atributos de tema. "system" usa prefers-color-scheme via CSS.
-_html_theme_attr = ""
-if _THEME == "light":
-    _html_theme_attr = 'data-theme="light"'
-elif _THEME == "dark":
-    _html_theme_attr = 'data-theme="dark"'
+# Bloques CSS con las variables. Light y Dark son explícitos.
+# Sistema usa @media (prefers-color-scheme: dark) sobre defaults claros.
+_VARS_LIGHT = """
+    --bg-app:        linear-gradient(180deg, #fafafa 0%, #f0f2f5 100%);
+    --bg-blob-1:     rgba(0,113,227,0.07);
+    --bg-blob-2:     rgba(255,159,10,0.06);
+    --bg-blob-3:     rgba(52,199,89,0.05);
+    --bg-card:       rgba(255,255,255,0.92);
+    --bg-glass:      rgba(255,255,255,0.78);
+    --bg-input:      rgba(255,255,255,0.96);
+    --bg-formula:    rgba(241,245,249,0.92);
+    --bg-tab-list:   rgba(255,255,255,0.7);
+    --bg-tab-active: #ffffff;
+    --bg-pill-recom: rgba(0,113,227,0.08);
+    --text-main:     #1d1d1f;
+    --text-sub:      #3a3a3c;
+    --text-muted:    #6e6e73;
+    --text-tabactive:#0071e3;
+    --border-light:  rgba(0,0,0,0.08);
+    --border-input:  rgba(0,0,0,0.18);
+    --border-tab:    rgba(0,0,0,0.10);
+    --shadow-card:   0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.05);
+    --shadow-strong: 0 1px 2px rgba(0,0,0,0.05), 0 12px 30px rgba(0,0,0,0.06);
+    --accent-blue:   #0071e3;
+    --accent-blue-h: #0077ed;
+    --accent-orange: #ff9500;   /* Naranja eléctrico iOS */
+    --accent-orange-h:#ffaa1a;
+    --ok-bg:    rgba(34,197,94,0.14);
+    --ok-bg2:   rgba(220,252,231,0.92);
+    --ok-bg3:   rgba(240,253,244,0.92);
+    --ok-bd:    rgba(34,197,94,0.40);
+    --ok-text:  #15803d;
+    --ok-text2: #14532d;
+    --warn-bg:  rgba(245,158,11,0.16);
+    --warn-bg2: rgba(254,243,199,0.92);
+    --warn-bg3: rgba(255,251,235,0.92);
+    --warn-bd:  rgba(245,158,11,0.42);
+    --warn-text: #b45309;
+    --warn-text2:#78350f;
+    --err-bg:   rgba(239,68,68,0.14);
+    --err-bg2:  rgba(254,226,226,0.92);
+    --err-bg3:  rgba(254,242,242,0.92);
+    --err-bd:   rgba(239,68,68,0.40);
+    --err-text: #b91c1c;
+    --err-text2:#7f1d1d;
+"""
 
-# Inyectar atributo data-theme en <html> para que el CSS lo lea
-st.markdown(
-    f"<script>document.documentElement.setAttribute('data-theme', '{_THEME}');</script>",
-    unsafe_allow_html=True,
-)
+_VARS_DARK = """
+    --bg-app:        linear-gradient(180deg, #0a0a0c 0%, #14161b 100%);
+    --bg-blob-1:     rgba(10,132,255,0.16);
+    --bg-blob-2:     rgba(255,159,10,0.10);
+    --bg-blob-3:     rgba(52,199,89,0.10);
+    --bg-card:       rgba(36,38,46,0.85);
+    --bg-glass:      rgba(36,38,46,0.72);
+    --bg-input:      rgba(255,255,255,0.08);
+    --bg-formula:    rgba(28,32,46,0.92);
+    --bg-tab-list:   rgba(255,255,255,0.08);
+    --bg-tab-active: rgba(255,255,255,0.16);
+    --bg-pill-recom: rgba(10,132,255,0.20);
+    --text-main:     #f5f5f7;
+    --text-sub:      #e5e5e7;
+    --text-muted:    #a1a1a6;
+    --text-tabactive:#0a84ff;
+    --border-light:  rgba(255,255,255,0.12);
+    --border-input:  rgba(255,255,255,0.20);
+    --border-tab:    rgba(255,255,255,0.14);
+    --shadow-card:   0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5);
+    --shadow-strong: 0 1px 2px rgba(0,0,0,0.45), 0 12px 30px rgba(0,0,0,0.55);
+    --accent-blue:   #0a84ff;
+    --accent-blue-h: #1a8eff;
+    --accent-orange: #ff9f0a;   /* Naranja eléctrico iOS dark */
+    --accent-orange-h:#ffaf2a;
+    --ok-bg:    rgba(48,209,88,0.22);
+    --ok-bg2:   rgba(20,80,40,0.65);
+    --ok-bg3:   rgba(15,60,30,0.65);
+    --ok-bd:    rgba(48,209,88,0.50);
+    --ok-text:  #6ee7b7;
+    --ok-text2: #a7f3d0;
+    --warn-bg:  rgba(255,159,10,0.22);
+    --warn-bg2: rgba(110,70,10,0.65);
+    --warn-bg3: rgba(80,55,10,0.65);
+    --warn-bd:  rgba(255,159,10,0.55);
+    --warn-text:#fcd34d;
+    --warn-text2:#fde68a;
+    --err-bg:   rgba(255,69,58,0.22);
+    --err-bg2:  rgba(110,30,30,0.65);
+    --err-bg3:  rgba(80,25,25,0.65);
+    --err-bd:   rgba(255,69,58,0.55);
+    --err-text: #fca5a5;
+    --err-text2:#fecaca;
+"""
+
+# Construir el bloque :root según el tema elegido por el usuario
+if _THEME == "dark":
+    _root_css = f":root {{{_VARS_DARK}}}"
+elif _THEME == "light":
+    _root_css = f":root {{{_VARS_LIGHT}}}"
+else:  # system
+    _root_css = (
+        f":root {{{_VARS_LIGHT}}}\n"
+        f"@media (prefers-color-scheme: dark) {{\n"
+        f"  :root {{{_VARS_DARK}}}\n"
+        f"}}"
+    )
+
+st.markdown(f"<style>\n{_root_css}\n</style>", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
-    /* ═══ VARIABLES DE TEMA ═════════════════════════════════ */
-    :root,
-    :root[data-theme="light"],
-    [data-theme="light"] {
-        --bg-app:        linear-gradient(180deg, #fafafa 0%, #f0f2f5 100%);
-        --bg-blob-1:     rgba(0,113,227,0.07);
-        --bg-blob-2:     rgba(255,159,10,0.06);
-        --bg-blob-3:     rgba(52,199,89,0.05);
-        --bg-card:       rgba(255,255,255,0.85);
-        --bg-glass:      rgba(255,255,255,0.7);
-        --bg-input:      rgba(255,255,255,0.92);
-        --bg-formula:    rgba(241,245,249,0.85);
-        --bg-tab-list:   rgba(255,255,255,0.6);
-        --bg-tab-active: #ffffff;
-        --bg-pill-recom: rgba(0,113,227,0.08);
-
-        --text-main:     #1d1d1f;
-        --text-sub:      #3a3a3c;
-        --text-muted:    #6e6e73;
-        --text-tabactive:#0071e3;
-
-        --border-light:  rgba(0,0,0,0.06);
-        --border-input:  rgba(0,0,0,0.12);
-        --border-tab:    rgba(0,0,0,0.08);
-        --shadow-card:   0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.05);
-        --shadow-strong: 0 1px 2px rgba(0,0,0,0.05), 0 12px 30px rgba(0,0,0,0.06);
-
-        --accent-blue:   #0071e3;
-        --accent-blue-h: #0077ed;
-
-        --ok-bg:    rgba(34,197,94,0.12);
-        --ok-bg2:   rgba(220,252,231,0.85);
-        --ok-bg3:   rgba(240,253,244,0.85);
-        --ok-bd:    rgba(34,197,94,0.32);
-        --ok-text:  #15803d;
-        --ok-text2: #14532d;
-        --warn-bg:   rgba(245,158,11,0.13);
-        --warn-bg2:  rgba(254,243,199,0.85);
-        --warn-bg3:  rgba(255,251,235,0.85);
-        --warn-bd:   rgba(245,158,11,0.34);
-        --warn-text: #b45309;
-        --warn-text2:#78350f;
-        --err-bg:    rgba(239,68,68,0.12);
-        --err-bg2:   rgba(254,226,226,0.85);
-        --err-bg3:   rgba(254,242,242,0.85);
-        --err-bd:    rgba(239,68,68,0.32);
-        --err-text:  #b91c1c;
-        --err-text2: #7f1d1d;
-    }
-    :root[data-theme="dark"],
-    [data-theme="dark"] {
-        --bg-app:        linear-gradient(180deg, #0a0a0c 0%, #14161b 100%);
-        --bg-blob-1:     rgba(10,132,255,0.16);
-        --bg-blob-2:     rgba(255,159,10,0.10);
-        --bg-blob-3:     rgba(52,199,89,0.10);
-        --bg-card:       rgba(28,30,38,0.78);
-        --bg-glass:      rgba(28,30,38,0.65);
-        --bg-input:      rgba(255,255,255,0.06);
-        --bg-formula:    rgba(28,32,46,0.85);
-        --bg-tab-list:   rgba(255,255,255,0.06);
-        --bg-tab-active: rgba(255,255,255,0.12);
-        --bg-pill-recom: rgba(10,132,255,0.18);
-
-        --text-main:     #f5f5f7;
-        --text-sub:      #d1d1d6;
-        --text-muted:    #a1a1a6;
-        --text-tabactive:#0a84ff;
-
-        --border-light:  rgba(255,255,255,0.08);
-        --border-input:  rgba(255,255,255,0.14);
-        --border-tab:    rgba(255,255,255,0.1);
-        --shadow-card:   0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5);
-        --shadow-strong: 0 1px 2px rgba(0,0,0,0.45), 0 12px 30px rgba(0,0,0,0.55);
-
-        --accent-blue:   #0a84ff;
-        --accent-blue-h: #1a8eff;
-
-        --ok-bg:    rgba(48,209,88,0.18);
-        --ok-bg2:   rgba(20,80,40,0.55);
-        --ok-bg3:   rgba(15,60,30,0.55);
-        --ok-bd:    rgba(48,209,88,0.40);
-        --ok-text:  #4ade80;
-        --ok-text2: #86efac;
-        --warn-bg:  rgba(255,159,10,0.20);
-        --warn-bg2: rgba(110,70,10,0.55);
-        --warn-bg3: rgba(80,55,10,0.55);
-        --warn-bd:  rgba(255,159,10,0.45);
-        --warn-text:#fbbf24;
-        --warn-text2:#fcd34d;
-        --err-bg:   rgba(255,69,58,0.20);
-        --err-bg2:  rgba(110,30,30,0.55);
-        --err-bg3:  rgba(80,25,25,0.55);
-        --err-bd:   rgba(255,69,58,0.45);
-        --err-text: #f87171;
-        --err-text2:#fca5a5;
-    }
-    /* Sistema: si el usuario eligió "system", aplicamos prefers-color-scheme */
-    @media (prefers-color-scheme: dark) {
-        :root[data-theme="system"],
-        [data-theme="system"] {
-            --bg-app:        linear-gradient(180deg, #0a0a0c 0%, #14161b 100%);
-            --bg-blob-1:     rgba(10,132,255,0.16);
-            --bg-blob-2:     rgba(255,159,10,0.10);
-            --bg-blob-3:     rgba(52,199,89,0.10);
-            --bg-card:       rgba(28,30,38,0.78);
-            --bg-glass:      rgba(28,30,38,0.65);
-            --bg-input:      rgba(255,255,255,0.06);
-            --bg-formula:    rgba(28,32,46,0.85);
-            --bg-tab-list:   rgba(255,255,255,0.06);
-            --bg-tab-active: rgba(255,255,255,0.12);
-            --bg-pill-recom: rgba(10,132,255,0.18);
-            --text-main:     #f5f5f7;
-            --text-sub:      #d1d1d6;
-            --text-muted:    #a1a1a6;
-            --text-tabactive:#0a84ff;
-            --border-light:  rgba(255,255,255,0.08);
-            --border-input:  rgba(255,255,255,0.14);
-            --border-tab:    rgba(255,255,255,0.1);
-            --shadow-card:   0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.5);
-            --shadow-strong: 0 1px 2px rgba(0,0,0,0.45), 0 12px 30px rgba(0,0,0,0.55);
-            --accent-blue:   #0a84ff;
-            --accent-blue-h: #1a8eff;
-            --ok-bg:    rgba(48,209,88,0.18);
-            --ok-bg2:   rgba(20,80,40,0.55);
-            --ok-bg3:   rgba(15,60,30,0.55);
-            --ok-bd:    rgba(48,209,88,0.40);
-            --ok-text:  #4ade80;
-            --ok-text2: #86efac;
-            --warn-bg:  rgba(255,159,10,0.20);
-            --warn-bg2: rgba(110,70,10,0.55);
-            --warn-bg3: rgba(80,55,10,0.55);
-            --warn-bd:  rgba(255,159,10,0.45);
-            --warn-text:#fbbf24;
-            --warn-text2:#fcd34d;
-            --err-bg:   rgba(255,69,58,0.20);
-            --err-bg2:  rgba(110,30,30,0.55);
-            --err-bg3:  rgba(80,25,25,0.55);
-            --err-bd:   rgba(255,69,58,0.45);
-            --err-text: #f87171;
-            --err-text2:#fca5a5;
-        }
-    }
-
     /* ═══ BASE ═══════════════════════════════════════════════ */
     html, body, [class*="css"], .stApp {
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
@@ -363,61 +312,94 @@ st.markdown("""
         margin: 14px 0 6px 0;
     }
 
-    /* ═══ LIQUID GLASS PANELS ═══════════════════════════════ */
+    /* ═══ LIQUID GLASS PANELS (iOS 26 style) ═══════════════ */
     .glass {
+        position: relative;
         background: var(--bg-glass);
-        backdrop-filter: saturate(180%) blur(20px);
-        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        backdrop-filter: saturate(200%) blur(28px);
+        -webkit-backdrop-filter: saturate(200%) blur(28px);
         border: 1px solid var(--border-light);
         border-radius: 18px;
         padding: 18px 20px;
-        box-shadow: var(--shadow-card);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.22),
+            var(--shadow-card);
         color: var(--text-main);
     }
     .glass-strong {
+        position: relative;
         background: var(--bg-card);
-        backdrop-filter: saturate(180%) blur(24px);
+        backdrop-filter: saturate(200%) blur(32px);
+        -webkit-backdrop-filter: saturate(200%) blur(32px);
         border: 1px solid var(--border-light);
         border-radius: 20px;
         padding: 20px;
-        box-shadow: var(--shadow-strong);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.25),
+            var(--shadow-strong);
         color: var(--text-main);
     }
     .panel-results {
         background: var(--bg-card);
-        backdrop-filter: saturate(180%) blur(24px);
-        -webkit-backdrop-filter: saturate(180%) blur(24px);
+        backdrop-filter: saturate(200%) blur(32px);
+        -webkit-backdrop-filter: saturate(200%) blur(32px);
         border: 1px solid var(--border-light);
         border-radius: 22px;
         padding: 20px;
-        box-shadow: var(--shadow-strong);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.25),
+            var(--shadow-strong);
         color: var(--text-main);
     }
 
-    /* ═══ RESULT CARDS (destacados) ═════════════════════════ */
+    /* ═══ RESULT CARDS — TODAS LA MISMA ALTURA ══════════════ */
     .result-card {
         position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         border-radius: 18px;
-        padding: 18px 20px 16px 20px;
-        margin: 8px 0;
+        padding: 18px 20px;
+        margin: 0 0 12px 0;
+        min-height: 130px;
         border: 1px solid var(--border-light);
         background: var(--bg-card);
-        backdrop-filter: blur(20px);
-        box-shadow: var(--shadow-card);
+        backdrop-filter: saturate(200%) blur(28px);
+        -webkit-backdrop-filter: saturate(200%) blur(28px);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.22),
+            var(--shadow-card);
         color: var(--text-main);
         transition: transform 0.18s ease, box-shadow 0.18s ease;
+        overflow: hidden;
+    }
+    /* Brillo superior tipo cristal (iOS 26) */
+    .result-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; height: 50%;
+        background: linear-gradient(180deg,
+            rgba(255,255,255,0.08), rgba(255,255,255,0));
+        pointer-events: none;
+        border-radius: 18px 18px 0 0;
     }
     .result-card:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-strong);
+        transform: translateY(-2px);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.28),
+            var(--shadow-strong);
     }
     .result-card.ok    { background: linear-gradient(135deg, var(--ok-bg2),   var(--ok-bg3));   border-color: var(--ok-bd); }
     .result-card.warn  { background: linear-gradient(135deg, var(--warn-bg2), var(--warn-bg3)); border-color: var(--warn-bd); }
     .result-card.error { background: linear-gradient(135deg, var(--err-bg2),  var(--err-bg3));  border-color: var(--err-bd); }
 
-    .rc-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    /* Card "destacada" (la grande del conductor recomendado) */
+    .result-card.featured { min-height: 160px; padding: 22px 24px; }
+    .result-card.featured .rc-value { font-size: 2.6rem; }
+
+    .rc-row { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
     .rc-icon {
-        width: 36px; height: 36px;
+        width: 40px; height: 40px;
         display: flex; align-items: center; justify-content: center;
         font-size: 18px;
         border-radius: 12px;
@@ -425,34 +407,38 @@ st.markdown("""
         border: 1px solid var(--border-light);
         flex: 0 0 auto;
         color: var(--text-main);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.20);
     }
     .rc-label {
-        font-size: 0.72rem; font-weight: 700;
+        font-size: 0.7rem; font-weight: 700;
         color: var(--text-muted);
         text-transform: uppercase; letter-spacing: 0.08em;
-        line-height: 1;
+        line-height: 1.2;
+        margin-bottom: 6px;
     }
     .rc-value {
-        font-size: 2.2rem; font-weight: 700;
+        font-size: 1.9rem; font-weight: 700;
         color: var(--text-main);
         line-height: 1.05; letter-spacing: -0.03em;
-        margin-top: 4px;
+        margin: 0 0 4px 0;
     }
     .rc-value.ok    { color: var(--ok-text); }
     .rc-value.warn  { color: var(--warn-text); }
     .rc-value.error { color: var(--err-text); }
     .rc-unit {
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         color: var(--text-muted);
-        margin-top: 4px;
+        margin-top: auto;
         font-weight: 500;
+        line-height: 1.3;
     }
     .rc-pill {
         display: inline-flex; align-items: center; gap: 4px;
-        padding: 3px 10px;
+        padding: 4px 10px;
         border-radius: 999px;
         font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
-        margin-top: 6px;
+        margin-top: 8px;
+        align-self: flex-start;
     }
     .rc-pill.ok    { background: var(--ok-bg);   color: var(--ok-text2); }
     .rc-pill.warn  { background: var(--warn-bg); color: var(--warn-text2); }
@@ -460,26 +446,40 @@ st.markdown("""
 
     /* Compact metric (para grids) */
     .metric-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         background: var(--bg-card);
-        backdrop-filter: blur(18px);
+        backdrop-filter: saturate(200%) blur(24px);
+        -webkit-backdrop-filter: saturate(200%) blur(24px);
         border: 1px solid var(--border-light);
         border-radius: 14px;
-        padding: 12px 14px;
+        padding: 14px 16px;
+        min-height: 96px;
         text-align: center;
-        box-shadow: var(--shadow-card);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.20),
+            var(--shadow-card);
         color: var(--text-main);
+        margin-bottom: 12px;
     }
     .metric-label {
         font-size: 0.7rem; font-weight: 700;
         color: var(--text-muted);
-        text-transform: uppercase; letter-spacing: 0.05em;
+        text-transform: uppercase; letter-spacing: 0.06em;
+        line-height: 1.2;
+        margin-bottom: 6px;
     }
     .metric-value {
-        font-size: 1.45rem; font-weight: 700;
+        font-size: 1.5rem; font-weight: 700;
         color: var(--text-main);
-        margin-top: 4px; letter-spacing: -0.02em;
+        margin: 0; letter-spacing: -0.02em;
+        line-height: 1.15;
     }
-    .metric-unit { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
+    .metric-unit {
+        font-size: 0.75rem; color: var(--text-muted);
+        margin-top: 6px; line-height: 1.3;
+    }
 
     /* ═══ BLOQUES DE MENSAJE  ═══════════════════════════════ */
     .resultado-ok, .resultado-warn, .resultado-error {
@@ -490,147 +490,340 @@ st.markdown("""
     .resultado-warn  { background: var(--warn-bg); color: var(--warn-text2); border: 1px solid var(--warn-bd); }
     .resultado-error { background: var(--err-bg);  color: var(--err-text2);  border: 1px solid var(--err-bd); }
 
-    /* ═══ SIDEBAR (siempre dark glass — independiente de tema) ═ */
+    /* ═══ SIDEBAR (siempre dark glass — independiente de tema global) ═ */
     section[data-testid="stSidebar"] {
         background:
-            linear-gradient(180deg, rgba(20,22,30,0.92), rgba(28,30,40,0.95)),
-            radial-gradient(600px 400px at 50% 0%, rgba(0,122,255,0.18), transparent 60%);
+            linear-gradient(180deg, rgba(20,22,30,0.94), rgba(28,30,40,0.97)),
+            radial-gradient(600px 400px at 50% 0%, rgba(0,122,255,0.18), transparent 60%) !important;
         backdrop-filter: blur(30px);
         -webkit-backdrop-filter: blur(30px);
         border-right: 1px solid rgba(255,255,255,0.06);
     }
     section[data-testid="stSidebar"] > div { padding-top: 1rem; }
-    section[data-testid="stSidebar"] *,
-    section[data-testid="stSidebar"] p,
-    section[data-testid="stSidebar"] h1, section[data-testid="stSidebar"] h2,
-    section[data-testid="stSidebar"] h3, section[data-testid="stSidebar"] h4,
-    section[data-testid="stSidebar"] label, section[data-testid="stSidebar"] span,
-    section[data-testid="stSidebar"] li,
-    section[data-testid="stSidebar"] .stMarkdown,
-    section[data-testid="stSidebar"] .stCaption {
+
+    /* Cualquier texto dentro del sidebar — fuerza blanco */
+    section[data-testid="stSidebar"],
+    section[data-testid="stSidebar"] *:not(button):not([class*="resultado"]):not(.stAlert) {
         color: #f5f5f7 !important;
     }
     section[data-testid="stSidebar"] small,
-    section[data-testid="stSidebar"] .stCaption {
+    section[data-testid="stSidebar"] .stCaption,
+    section[data-testid="stSidebar"] [data-testid="stCaptionContainer"],
+    section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] * {
         color: #a1a1a6 !important;
     }
+
+    /* Inputs: text_input, number_input, text_area */
     section[data-testid="stSidebar"] input,
-    section[data-testid="stSidebar"] textarea {
-        background: rgba(255,255,255,0.08) !important;
+    section[data-testid="stSidebar"] textarea,
+    section[data-testid="stSidebar"] [data-baseweb="input"] input,
+    section[data-testid="stSidebar"] [data-baseweb="textarea"] textarea,
+    section[data-testid="stSidebar"] [data-testid="stTextInput"] input,
+    section[data-testid="stSidebar"] [data-testid="stTextArea"] textarea,
+    section[data-testid="stSidebar"] [data-testid="stNumberInput"] input,
+    section[data-testid="stSidebar"] [data-testid="stDateInput"] input {
+        background: rgba(255,255,255,0.10) !important;
         border-radius: 10px !important;
-        border: 1px solid rgba(255,255,255,0.14) !important;
+        border: 1px solid rgba(255,255,255,0.18) !important;
         color: #f5f5f7 !important;
+        -webkit-text-fill-color: #f5f5f7 !important;
+        caret-color: #f5f5f7 !important;
     }
-    section[data-testid="stSidebar"] [data-baseweb="select"] > div {
-        background: rgba(255,255,255,0.08) !important;
-        border-radius: 10px !important;
-        border: 1px solid rgba(255,255,255,0.14) !important;
-        color: #f5f5f7 !important;
+    section[data-testid="stSidebar"] input::placeholder,
+    section[data-testid="stSidebar"] textarea::placeholder {
+        color: #a1a1a6 !important;
+        opacity: 0.7;
     }
-    section[data-testid="stSidebar"] label {
-        font-size: 0.78rem !important; font-weight: 600;
-        opacity: 0.92;
-    }
-    section[data-testid="stSidebar"] [data-testid="stExpander"] {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 12px;
-    }
-    section[data-testid="stSidebar"] [data-testid="stExpander"] * {
-        color: #f5f5f7 !important;
+    section[data-testid="stSidebar"] input:focus,
+    section[data-testid="stSidebar"] textarea:focus {
+        border-color: #0a84ff !important;
+        box-shadow: 0 0 0 3px rgba(10,132,255,0.25) !important;
     }
 
-    /* ═══ TABS (segmented control con glass) ════════ */
+    /* Selectbox y multiselect en sidebar */
+    section[data-testid="stSidebar"] [data-baseweb="select"] > div,
+    section[data-testid="stSidebar"] [data-baseweb="select"] [role="combobox"],
+    section[data-testid="stSidebar"] [data-baseweb="select"] [role="option"] {
+        background: rgba(255,255,255,0.10) !important;
+        border-radius: 10px !important;
+        border-color: rgba(255,255,255,0.18) !important;
+        color: #f5f5f7 !important;
+    }
+    section[data-testid="stSidebar"] [data-baseweb="select"] svg { fill: #f5f5f7 !important; }
+    section[data-testid="stSidebar"] [data-baseweb="tag"] {
+        background: rgba(10,132,255,0.30) !important;
+        color: #f5f5f7 !important;
+        border: 1px solid rgba(10,132,255,0.50) !important;
+    }
+    section[data-testid="stSidebar"] [data-baseweb="tag"] * { color: #f5f5f7 !important; }
+
+    /* Labels más legibles */
+    section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
+    section[data-testid="stSidebar"] label {
+        font-size: 0.82rem !important; font-weight: 600;
+        color: #f5f5f7 !important;
+        opacity: 1;
+    }
+
+    /* Expanders */
+    section[data-testid="stSidebar"] [data-testid="stExpander"] {
+        background: rgba(255,255,255,0.06) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 12px;
+    }
+    section[data-testid="stSidebar"] [data-testid="stExpander"] summary,
+    section[data-testid="stSidebar"] [data-testid="stExpander"] summary *,
+    section[data-testid="stSidebar"] [data-testid="stExpander"] details *,
+    section[data-testid="stSidebar"] [data-testid="stExpander"] svg {
+        color: #f5f5f7 !important;
+        fill: #f5f5f7 !important;
+    }
+
+    /* Botones del sidebar */
+    section[data-testid="stSidebar"] .stButton > button {
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.18) !important;
+        color: #f5f5f7 !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button:hover {
+        background: rgba(255,255,255,0.14) !important;
+    }
+    section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
+        background: linear-gradient(180deg, #1a8eff, #0a84ff) !important;
+        border: 1px solid #0a84ff !important;
+    }
+
+    /* Radio en sidebar (selector de tema) */
+    section[data-testid="stSidebar"] [data-testid="stRadio"] label {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 8px;
+        padding: 4px 8px;
+        margin-right: 4px;
+    }
+
+    /* Popover de selects (cuando se abre el dropdown) */
+    [data-baseweb="popover"] [role="listbox"],
+    [data-baseweb="popover"] [role="option"],
+    [data-baseweb="menu"] li {
+        color: var(--text-main) !important;
+        background: var(--bg-card) !important;
+    }
+    [data-baseweb="popover"] [role="option"]:hover {
+        background: var(--bg-input) !important;
+    }
+
+    /* ═══ TABS (segmented control con liquid glass iOS 26) ═ */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 4px;
+        gap: 3px;
         background: var(--bg-tab-list);
-        backdrop-filter: blur(18px);
-        padding: 6px;
+        backdrop-filter: saturate(200%) blur(24px);
+        -webkit-backdrop-filter: saturate(200%) blur(24px);
+        padding: 5px;
         border-radius: 14px;
         border: 1px solid var(--border-tab);
-        box-shadow: var(--shadow-card);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.18),
+            var(--shadow-card);
         overflow-x: auto;
         scrollbar-width: thin;
+        margin-bottom: 6px;
+        flex-wrap: nowrap;
     }
     .stTabs [data-baseweb="tab"] {
-        font-weight: 600; font-size: 0.92rem;
+        font-weight: 600;
+        font-size: 0.86rem;
         border-radius: 10px;
-        padding: 8px 16px;
+        padding: 8px 14px;
         color: var(--text-main) !important;
         white-space: nowrap;
+        min-height: 38px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.18s ease;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background: var(--bg-input);
     }
     .stTabs [aria-selected="true"] {
         background: var(--bg-tab-active) !important;
         color: var(--text-tabactive) !important;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.30),
+            0 2px 8px rgba(0,0,0,0.10);
+    }
+    /* En pantallas medianas, tabs más compactos */
+    @media (max-width: 1280px) {
+        .stTabs [data-baseweb="tab"] {
+            font-size: 0.8rem;
+            padding: 8px 10px;
+        }
     }
 
-    /* ═══ INPUTS  ════════════════════════════════════════════ */
-    .stTextInput input, .stNumberInput input, .stTextArea textarea {
-        border-radius: 10px !important;
+    /* ═══ INPUTS — TODOS CON LA MISMA ALTURA (44px iOS) ═══ */
+    /* Etiqueta consistente */
+    [data-testid="stWidgetLabel"],
+    [data-testid="stWidgetLabel"] p {
+        font-size: 0.78rem; font-weight: 600;
+        color: var(--text-sub) !important;
+        margin-bottom: 4px !important;
+        min-height: 18px;
+        line-height: 1.25;
+    }
+    /* Spacing uniforme entre widgets */
+    .stNumberInput, .stTextInput, .stSelectbox, .stTextArea,
+    .stDateInput, .stMultiselect {
+        margin-bottom: 12px !important;
+    }
+
+    /* Altura uniforme — todos los inputs */
+    .stTextInput input,
+    .stNumberInput input,
+    .stDateInput input,
+    .stSelectbox > div > div,
+    [data-baseweb="select"] > div,
+    [data-baseweb="input"] {
+        border-radius: 12px !important;
         border: 1px solid var(--border-input) !important;
         background: var(--bg-input) !important;
         color: var(--text-main) !important;
-        font-size: 0.92rem;
+        font-size: 0.93rem !important;
+        min-height: 44px !important;
+        height: 44px !important;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+        transition: all 0.15s ease;
     }
+    /* Textarea: altura libre pero mismo borde */
+    .stTextArea textarea {
+        border-radius: 12px !important;
+        border: 1px solid var(--border-input) !important;
+        background: var(--bg-input) !important;
+        color: var(--text-main) !important;
+        font-size: 0.93rem !important;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    /* Focus uniforme con anillo azul */
+    .stTextInput input:focus,
+    .stNumberInput input:focus,
+    .stDateInput input:focus,
+    .stTextArea textarea:focus {
+        border-color: var(--accent-blue) !important;
+        box-shadow:
+            0 0 0 3px rgba(10,132,255,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.10) !important;
+        outline: none !important;
+    }
+    [data-baseweb="select"] > div:focus-within {
+        border-color: var(--accent-blue) !important;
+        box-shadow: 0 0 0 3px rgba(10,132,255,0.18) !important;
+    }
+
     .stTextInput input::placeholder,
     .stNumberInput input::placeholder,
     .stTextArea textarea::placeholder {
         color: var(--text-muted) !important;
-        opacity: 0.6;
+        opacity: 0.55;
     }
-    .stTextInput input:focus, .stNumberInput input:focus, .stTextArea textarea:focus {
-        border-color: var(--accent-blue) !important;
-        box-shadow: 0 0 0 3px rgba(0,113,227,0.15) !important;
-    }
-    .stSelectbox > div > div, [data-baseweb="select"] > div {
-        border-radius: 10px !important;
-        background: var(--bg-input) !important;
-        border: 1px solid var(--border-input) !important;
-        color: var(--text-main) !important;
-    }
-    [data-baseweb="select"] [data-baseweb="tag"] { color: var(--text-main) !important; }
-    [data-baseweb="popover"] li { color: var(--text-main) !important; }
 
-    .stNumberInput, .stTextInput, .stSelectbox, .stTextArea {
-        margin-bottom: 6px;
+    /* ── NUMBER INPUT: ocultar X y normalizar botones +/- ── */
+    /* La X de "clear" sólo aparece en number_input */
+    .stNumberInput button[aria-label*="clear" i],
+    .stNumberInput button[aria-label*="borrar" i],
+    .stNumberInput button[title*="Clear" i],
+    .stNumberInput [data-testid*="clear" i] {
+        display: none !important;
     }
-    [data-testid="stWidgetLabel"] p {
-        font-size: 0.82rem; font-weight: 600;
-        color: var(--text-sub);
-        margin-bottom: 2px;
+    /* Botones +/- del number_input: planos, mismo tamaño */
+    .stNumberInput button {
+        min-height: 44px !important;
+        height: 44px !important;
+        width: 36px !important;
+        border-radius: 0 !important;
+        border: 1px solid var(--border-input) !important;
+        border-left: none !important;
+        background: var(--bg-input) !important;
+        color: var(--text-main) !important;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: none !important;
+    }
+    .stNumberInput button:hover {
+        background: var(--bg-card) !important;
+        color: var(--accent-blue) !important;
+    }
+    /* Quitar background gris de los step buttons */
+    .stNumberInput div[data-baseweb="input"] > div:last-child {
+        background: transparent !important;
+        border-radius: 0 12px 12px 0 !important;
+        overflow: hidden;
+    }
+    /* Container del number_input alineado */
+    .stNumberInput [data-baseweb="input"] {
+        border-radius: 12px !important;
+        overflow: hidden;
+    }
+    /* Multiselect tags compactas */
+    [data-baseweb="select"] [data-baseweb="tag"] {
+        color: var(--text-main) !important;
+        background: rgba(10,132,255,0.14) !important;
+        border: 1px solid rgba(10,132,255,0.35) !important;
+        border-radius: 8px !important;
+    }
+    [data-baseweb="popover"] li,
+    [data-baseweb="popover"] [role="option"] {
+        color: var(--text-main) !important;
     }
 
     /* Radio en main: legible en ambos temas */
     .stRadio > div > label { color: var(--text-main) !important; }
+    .stRadio > div > label p { color: var(--text-main) !important; }
 
-    /* ═══ BUTTONS  ═══════════════════════════════════════════ */
-    .stButton > button {
-        border-radius: 12px;
-        font-weight: 600; font-size: 0.9rem;
-        padding: 8px 18px;
-        border: 1px solid var(--border-input);
-        transition: all 0.15s ease;
-        backdrop-filter: blur(10px);
-        color: var(--text-main);
+    /* Checkbox compacto */
+    .stCheckbox {
+        margin-bottom: 8px;
     }
-    .stButton > button[kind="primary"] {
+    .stCheckbox label { font-size: 0.92rem !important; }
+
+    /* ═══ BUTTONS — iOS 26 ═══════════════════════════════════ */
+    .stButton > button, .stDownloadButton > button, .stFormSubmitButton > button {
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.92rem;
+        padding: 10px 18px;
+        min-height: 44px;
+        border: 1px solid var(--border-input);
+        transition: all 0.18s ease;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        color: var(--text-main);
+        background: var(--bg-glass);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.15),
+            0 1px 2px rgba(0,0,0,0.04);
+    }
+    .stButton > button:hover, .stDownloadButton > button:hover {
+        transform: translateY(-1px);
+        background: var(--bg-card);
+    }
+    .stButton > button[kind="primary"], .stFormSubmitButton > button[kind="primary"] {
         background: linear-gradient(180deg, var(--accent-blue-h), var(--accent-blue));
-        color: white !important;
+        color: #ffffff !important;
         border: 1px solid var(--accent-blue);
-        box-shadow: 0 2px 6px rgba(0,113,227,0.3);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.22),
+            0 2px 8px rgba(10,132,255,0.35);
     }
     .stButton > button[kind="primary"]:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,113,227,0.4);
+        box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.25),
+            0 6px 16px rgba(10,132,255,0.45);
     }
     .stButton > button[kind="secondary"] {
         background: var(--bg-card);
         color: var(--text-main) !important;
-    }
-    .stDownloadButton > button {
-        border-radius: 12px; font-weight: 600;
-        color: var(--text-main);
     }
 
     /* ═══ EXPANDERS (glass, ambos temas) ═══════════════════ */
@@ -1108,15 +1301,15 @@ with col_h2:
 # ─────────────────────────────────────────────
 # TABS PRINCIPALES
 # ─────────────────────────────────────────────
-# Pestañas profesionales — herramientas de cálculo
+# Pestañas profesionales — herramientas de cálculo (compactas, no se cortan)
 _tab_labels = [
-    "🔌  Conductor & C.d.T.",
-    "🔧  Tubería (Conduit)",
-    "📊  Tablero del Proyecto",
-    "📄  Reporte PDF / Word",
+    "🔌 Conductor",
+    "🔧 Tubería",
+    "📊 Tablero",
+    "📄 Reporte",
 ]
 if _is_admin:
-    _tab_labels.append("👥  Administración")
+    _tab_labels.append("👥 Admin")
     tab1, tab2, tab3, tab4, tab_users = st.tabs(_tab_labels)
 else:
     tab1, tab2, tab3, tab4 = st.tabs(_tab_labels)
@@ -1155,7 +1348,7 @@ with tab1:
     # ════════════════════════════════════════════════════════════════
     # LAYOUT 2 COLUMNAS — Izquierda: inputs · Derecha: resultados
     # ════════════════════════════════════════════════════════════════
-    col_inputs, col_results = st.columns([5, 4], gap="large")
+    col_inputs, col_results = st.columns([1, 1], gap="large")
 
     # ══════════════════════════════════════════════
     # PANEL IZQUIERDO — PARÁMETROS COMPACTOS
@@ -1935,7 +2128,7 @@ with tab2:
         unsafe_allow_html=True,
     )
 
-    col_in_t, col_res_t = st.columns([5, 4], gap="large")
+    col_in_t, col_res_t = st.columns([1, 1], gap="large")
 
     # ── Inputs ──────────────────────────────────
     with col_in_t:

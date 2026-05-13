@@ -5,14 +5,12 @@ Distribuye los circuitos del proyecto entre las fases R, S y T y calcula
 balanceo, % desbalance y demanda total. También genera el Excel con fórmulas
 (no valores) para edición manual.
 """
-from typing import Optional
-import math
 import io
 from datetime import date
 
 from openpyxl import Workbook
 from openpyxl.styles import (
-    Font, PatternFill, Alignment, Border, Side, NamedStyle,
+    Font, PatternFill, Alignment, Border, Side,
 )
 from openpyxl.utils import get_column_letter
 
