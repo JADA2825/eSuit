@@ -47,12 +47,19 @@ def main() -> None:
         print(f"ERROR: no se encontró app.py en {base}")
         sys.exit(1)
 
+    # Forzar UTF-8 en stdout cuando se ejecuta como exe en Windows
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
     puerto = _puerto_libre(8501)
     url = f"http://localhost:{puerto}"
-    print(f"╔═══════════════════════════════════════════════╗")
-    print(f"║   eSuit — Cálculo eléctrico profesional       ║")
-    print(f"║   Abriendo en {url:<31} ║")
-    print(f"╚═══════════════════════════════════════════════╝")
+    print("=" * 50)
+    print("  eSuit - Calculo electrico profesional")
+    print(f"  Abriendo en {url}")
+    print("=" * 50)
 
     # Lanza el navegador después de unos segundos en un hilo aparte
     threading.Thread(target=_abrir_navegador,
